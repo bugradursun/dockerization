@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-nodejs-demo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      todo: web
+  template:
+    metadata:
+      labels:
+        todo: web
+    spec:
+      containers:
+      - name: todo-site
+        image: bugradursun/dockerization
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    todo: web
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30001
+
+#This YAML file defines two object Deployment and Service to be ran in the Kubernetes for Docker container. Kubernetes scales and distributes docker containers.
+#There are two objects seperated by the --
+# DEPLOYMENT:Deployment named docker-nodejs-demo, this creates replicates using pod scheme.  
+# Service: Nodeport type service called todo-entrypoint. (Service podları dış dünyaya açar ve onlara erişim sağlar).
